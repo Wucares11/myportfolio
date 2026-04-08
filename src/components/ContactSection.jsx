@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utilis";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import axios from "axios";
+import emailjs from "@emailjs/browser";
 
 export const ContactSection = () => {
   const { toast } = useToast();
@@ -20,40 +20,34 @@ export const ContactSection = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      const res = await axios.post(
-        "https://portfolio-backend-7dwu.onrender.com/send",
-        {
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-        }
-      );
+  try {
+    const res = await emailjs.send(
+      "service_ezb2oh9",
+      "template_5hr8aka",
+      { name, email, message },
+      "R3-9ErxEevwOZpvd5"
+    );
 
-      console.log(res.data);
-      toast({
-        title: "Message sent!",
-        description: "Thank you for your message. I'll get back to you soon.",
-      });
-
-      // Clear form after submission
+    if (res.status === 200) {
+      toast({ title: "Message sent!", description: "I'll get back to you soon." });
       setName("");
       setEmail("");
       setMessage("");
-    } catch (error) {
-      toast({
-        title: "Something went wrong",
-        description: error.response?.data?.message || "Unable to send message.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+  } catch (error) {
+    toast({
+      title: "Something went wrong",
+      description: "Unable to send message.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+}; 
 
   return (
     <section id="contact" className="py-24 px-4 relative bg-secondary/30">
