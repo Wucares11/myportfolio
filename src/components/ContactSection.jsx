@@ -26,7 +26,7 @@ export const ContactSection = () => {
 
     try {
       const res = await axios.post(
-        "https://portfolio-backend-7dwu.onrender.com",
+        "https://portfolio-backend-7dwu.onrender.com/send",
         {
           name: formData.name,
           email: formData.email,
